@@ -46,18 +46,18 @@ button {
 <div class="card">
   <h2>💖 To My Love 💖</h2>
 
-  <input id="sender" placeholder="Your Name 😎💖">
+  <input id="partner" placeholder="Partner Name 😍">
+
   <select id="senderGender">
-    <option value="">Sender Gender</option>
-    <option value="male">Male ♂️</option>
-    <option value="female">Female ♀️</option>
+    <option value="">Your Gender</option>
+    <option value="m">Male ♂️</option>
+    <option value="f">Female ♀️</option>
   </select>
 
-  <input id="partner" placeholder="Partner Name 😍">
   <select id="partnerGender">
     <option value="">Partner Gender</option>
-    <option value="female">Female ♀️</option>
-    <option value="male">Male ♂️</option>
+    <option value="f">Female ♀️</option>
+    <option value="m">Male ♂️</option>
   </select>
 
   <button onclick="generateLink()">Generate Love Link 💌</button>
@@ -66,21 +66,21 @@ button {
 
 <script>
 function generateLink() {
-  const sender = document.getElementById("sender").value.trim();
   const partner = document.getElementById("partner").value.trim();
   const sg = document.getElementById("senderGender").value;
   const pg = document.getElementById("partnerGender").value;
 
-  if (!sender || !partner || !sg || !pg) {
+  if (!partner || !sg || !pg) {
     alert("Please fill all details 💕");
     return;
   }
 
-  const s = btoa(unescape(encodeURIComponent(sender)));
-  const p = btoa(unescape(encodeURIComponent(partner)));
+  // Emoji-safe short encoding
+  const y = btoa(unescape(encodeURIComponent(partner)));
+  const g = sg + pg; // mf or fm
 
   const baseURL = location.origin + location.pathname.replace(/\/[^\/]*$/, "/");
-  const link = `${baseURL}love.html?s=${s}&p=${p}&sg=${sg}&pg=${pg}`;
+  const link = `${baseURL}love.html?y=${y}&g=${g}`;
 
   document.getElementById("linkBox").innerHTML =
     `<p>Send this link 💖</p><a href="${link}" target="_blank">${link}</a>`;
