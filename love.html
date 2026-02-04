@@ -81,7 +81,7 @@ button {
 
 <script>
 const params = new URLSearchParams(location.search);
-const partner = atob(params.get("y") || "");
+const partner = decodeURIComponent(escape(atob(params.get("y") || "")));
 const music = document.getElementById("bgMusic");
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
@@ -107,7 +107,12 @@ noBtn.addEventListener("touchstart", evadeNo);
 
 /* 💖 YES CLICK */
 yesBtn.addEventListener("click", () => {
-  music.volume = 0.35;   // soft romantic volume
+  // 📳 Phone vibration (mobile only)
+if (navigator.vibrate) {
+  navigator.vibrate([200, 100, 200, 100, 300]);
+}
+
+  music.volume = 0.8;   // soft romantic volume
   music.play().catch(() => {});
 
   document.getElementById("mainBox").innerHTML = `
@@ -152,3 +157,4 @@ function fireworks() {
 
 </body>
 </html>
+
