@@ -21,12 +21,10 @@ body {
   width: 320px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
-input {
+input, select {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
 }
 button {
   background: #ff4d6d;
@@ -36,18 +34,10 @@ button {
   width: 100%;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-}
-button:hover {
-  background: #ff3355;
 }
 #linkBox {
   margin-top: 15px;
   word-break: break-all;
-}
-.copyBtn {
-  background: #6c63ff;
-  margin-top: 8px;
 }
 </style>
 </head>
@@ -56,10 +46,21 @@ button:hover {
 <div class="card">
   <h2>💖 To My Love 💖</h2>
 
-  <input id="sender" placeholder="Your Name">
-  <input id="partner" placeholder="Partner Name">
+  <input id="sender" placeholder="Your Name 😎💖">
+  <select id="senderGender">
+    <option value="">Sender Gender</option>
+    <option value="male">Male ♂️</option>
+    <option value="female">Female ♀️</option>
+  </select>
 
-  <button onclick="generateLink()">Share Love 💌</button>
+  <input id="partner" placeholder="Partner Name 😍">
+  <select id="partnerGender">
+    <option value="">Partner Gender</option>
+    <option value="female">Female ♀️</option>
+    <option value="male">Male ♂️</option>
+  </select>
+
+  <button onclick="generateLink()">Generate Love Link 💌</button>
   <div id="linkBox"></div>
 </div>
 
@@ -67,34 +68,24 @@ button:hover {
 function generateLink() {
   const sender = document.getElementById("sender").value.trim();
   const partner = document.getElementById("partner").value.trim();
+  const sg = document.getElementById("senderGender").value;
+  const pg = document.getElementById("partnerGender").value;
 
-  if (!sender || !partner) {
-    alert("Please enter both names 💕");
+  if (!sender || !partner || !sg || !pg) {
+    alert("Please fill all details 💕");
     return;
   }
-
 
   const s = btoa(unescape(encodeURIComponent(sender)));
   const p = btoa(unescape(encodeURIComponent(partner)));
 
-
   const baseURL = location.origin + location.pathname.replace(/\/[^\/]*$/, "/");
-  const link = `${baseURL}love.html?x=${s}&y=${p}`;
+  const link = `${baseURL}love.html?s=${s}&p=${p}&sg=${sg}&pg=${pg}`;
 
-  document.getElementById("linkBox").innerHTML = `
-    <p>Send this link 💖</p>
-    <a href="${link}" target="_blank">${link}</a>
-    <button class="copyBtn" onclick="copyLink('${link}')">Copy Link 📋</button>
-  `;
-}
-
-function copyLink(link) {
-  navigator.clipboard.writeText(link);
-  alert("Link copied 💕 Send it to your love!");
+  document.getElementById("linkBox").innerHTML =
+    `<p>Send this link 💖</p><a href="${link}" target="_blank">${link}</a>`;
 }
 </script>
 
 </body>
 </html>
-
-
