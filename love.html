@@ -66,7 +66,7 @@ button {
 
 <body>
 
-<!-- 🎵 Background Music (selected by gender) -->
+<!-- 🎵 Background Music (selected dynamically) -->
 <audio id="bgMusic" loop preload="auto"></audio>
 
 <div class="box" id="mainBox">
@@ -79,14 +79,18 @@ button {
 
 <script>
 /* ===============================
-   GET DATA FROM LINK (EMOJI SAFE)
+   READ SHORT LINK PARAMETERS
+   y = partner name
+   g = gender combo (mf / fm)
 ================================ */
 const params = new URLSearchParams(location.search);
 
-const sender = decodeURIComponent(escape(atob(params.get("s") || "")));
-const partner = decodeURIComponent(escape(atob(params.get("p") || "")));
-const senderGender = params.get("sg");
-const partnerGender = params.get("pg");
+// Emoji-safe decode
+const partner = decodeURIComponent(
+  escape(atob(params.get("y") || ""))
+);
+
+const genderCombo = params.get("g"); // mf or fm
 
 /* ===============================
    ELEMENTS
@@ -96,16 +100,16 @@ const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 
 /* ===============================
-   SELECT SONG BY GENDER
+   SELECT MUSIC BY GENDER
 ================================ */
-if (senderGender === "male" && partnerGender === "female") {
+if (genderCombo === "mf") {
   music.src = "assets/love_1.mp3";
-} else if (senderGender === "female" && partnerGender === "male") {
+} else if (genderCombo === "fm") {
   music.src = "assets/love_2.mp3";
 }
 
 /* ===============================
-   DISPLAY MESSAGE
+   DISPLAY QUESTION
 ================================ */
 document.getElementById("msg").innerHTML =
   `Hai ${partner} 💕<br>Will you be my Valentine?`;
@@ -138,7 +142,7 @@ yesBtn.addEventListener("click", () => {
   }
 
   // 🎵 Play music
-  music.volume = 0.35;
+  music.volume = 0.8;   // soft romantic volume
   music.play().catch(()=>{});
 
   // Change content
