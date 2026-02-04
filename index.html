@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>To My Love 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -13,38 +14,50 @@ body {
   align-items: center;
   justify-content: center;
 }
+
 .card {
   background: white;
   padding: 25px;
   border-radius: 15px;
   text-align: center;
-  width: 320px;
+  width: 330px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
+
 input, select {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
+
 button {
   background: #ff4d6d;
   color: white;
   border: none;
-  padding: 10px;
+  padding: 12px;
   width: 100%;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
 }
+
 #linkBox {
   margin-top: 15px;
   word-break: break-all;
+  font-size: 14px;
 }
 </style>
 </head>
+
 <body>
 
 <div class="card">
-  <h2>💖 To My Love 💖</h2>
+  <h2>💖 Create Love Link 💖</h2>
+
+  <!-- ✅ Sender name block (NEW) -->
+  <input id="sender" placeholder="Your Name 😎💖">
 
   <input id="partner" placeholder="Partner Name 😍">
 
@@ -61,29 +74,40 @@ button {
   </select>
 
   <button onclick="generateLink()">Generate Love Link 💌</button>
+
   <div id="linkBox"></div>
 </div>
 
 <script>
 function generateLink() {
+  const sender = document.getElementById("sender").value.trim();
   const partner = document.getElementById("partner").value.trim();
   const sg = document.getElementById("senderGender").value;
   const pg = document.getElementById("partnerGender").value;
 
-  if (!partner || !sg || !pg) {
+  if (!sender || !partner || !sg || !pg) {
     alert("Please fill all details 💕");
     return;
   }
 
-  // Emoji-safe short encoding
-  const y = btoa(unescape(encodeURIComponent(partner)));
-  const g = sg + pg; // mf or fm
+  // ✅ Save sender name locally (NOT in URL)
+  sessionStorage.setItem("senderName", sender);
 
-  const baseURL = location.origin + location.pathname.replace(/\/[^\/]*$/, "/");
+  // Emoji-safe short encoding (only partner name)
+  const y = btoa(unescape(encodeURIComponent(partner)));
+
+  // Gender combo: mf or fm
+  const g = sg + pg;
+
+  const baseURL =
+    location.origin + location.pathname.replace(/\/[^\/]*$/, "/");
+
   const link = `${baseURL}love.html?y=${y}&g=${g}`;
 
-  document.getElementById("linkBox").innerHTML =
-    `<p>Send this link 💖</p><a href="${link}" target="_blank">${link}</a>`;
+  document.getElementById("linkBox").innerHTML = `
+    <p>Send this link 💖</p>
+    <a href="${link}" target="_blank">${link}</a>
+  `;
 }
 </script>
 
