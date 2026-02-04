@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>💖 A Question For You 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body {
   margin: 0;
@@ -57,15 +58,18 @@ button {
 }
 </style>
 </head>
+
 <body>
 
+<!-- Background Music (plays ONLY on YES click) -->
 <audio id="bgMusic" loop>
   <source src="assets/love.mp3" type="audio/mpeg">
 </audio>
 
-<div class="box" id="questionBox">
+<div class="box">
   <h2 id="msg"></h2>
-  <img src="assets/heart.gif" width="120"><br>
+
+  <img src="assets/heart.gif" width="120"><br><br>
 
   <button id="yes" onclick="yesClicked()">YES 💖</button>
   <button id="no" onmouseover="moveNo()">NO 😜</button>
@@ -79,18 +83,17 @@ const music = document.getElementById("bgMusic");
 document.getElementById("msg").innerHTML =
   `Hai ${partner} 💕<br>Will you be my Valentine?`;
 
-document.addEventListener("click", () => {
-  music.play().catch(()=>{});
-}, { once: true });
-
 function yesClicked() {
+  music.volume = 0.7;
   music.play().catch(()=>{});
+
   document.body.innerHTML = `
     <div class="box">
       <h1>YAY 😍</h1>
       <p>Best decision ever 💖<br>I love you 😘</p>
       <img src="assets/love.png" width="200">
-    </div>`;
+    </div>
+  `;
 }
 
 function moveNo() {
@@ -107,6 +110,7 @@ function createHearts() {
   document.body.appendChild(h);
   setTimeout(() => h.remove(), 5000);
 }
+
 setInterval(createHearts, 400);
 </script>
 
