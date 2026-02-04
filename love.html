@@ -25,6 +25,7 @@ body {
   width: 90%;
   max-width: 350px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  z-index: 2;
 }
 
 button {
@@ -46,72 +47,98 @@ button {
   position: absolute;
 }
 
-.hearts {
+/* Fireworks */
+.firework {
   position: fixed;
-  font-size: 22px;
-  animation: fall 5s linear infinite;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: explode 1s ease-out forwards;
 }
 
-@keyframes fall {
-  from { top: -10%; }
-  to { top: 110%; }
+@keyframes explode {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(15); opacity: 0; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- Background Music (plays ONLY on YES click) -->
 <audio id="bgMusic" loop>
   <source src="assets/love.mp3" type="audio/mpeg">
 </audio>
 
-<div class="box">
+<div class="box" id="mainBox">
   <h2 id="msg"></h2>
-
   <img src="assets/heart.gif" width="120"><br><br>
 
   <button id="yes" onclick="yesClicked()">YES 💖</button>
-  <button id="no" onmouseover="moveNo()">NO 😜</button>
+  <button id="no">NO 😜</button>
 </div>
 
 <script>
 const params = new URLSearchParams(location.search);
 const partner = atob(params.get("y") || "");
 const music = document.getElementById("bgMusic");
+const noBtn = document.getElementById("no");
 
 document.getElementById("msg").innerHTML =
   `Hai ${partner} 💕<br>Will you be my Valentine?`;
 
+/* 😈 SUPER-SMART NO BUTTON (desktop + mobile) */
+function moveNo() {
+  noBtn.style.left = Math.random() * 80 + "%";
+  noBtn.style.top = Math.random() * 80 + "%";
+}
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
+
+/* 💖 YES CLICK */
 function yesClicked() {
-  music.volume = 0.7;
+  music.volume = 1.0;
   music.play().catch(()=>{});
 
   document.body.innerHTML = `
     <div class="box">
       <h1>YAY 😍</h1>
-      <p>Best decision ever 💖<br>I love you 😘</p>
+      <p id="typeText"></p>
       <img src="assets/love.png" width="200">
     </div>
   `;
+
+  typeWriter("Best decision ever 💖 I love you endlessly 😘");
+  fireworks();
 }
 
-function moveNo() {
-  const btn = document.getElementById("no");
-  btn.style.left = Math.random() * 80 + "%";
-  btn.style.top = Math.random() * 80 + "%";
+/* 💬 TYPEWRITER EFFECT */
+function typeWriter(text) {
+  let i = 0;
+  const speed = 60;
+  const target = document.getElementById("typeText");
+
+  function typing() {
+    if (i < text.length) {
+      target.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    }
+  }
+  typing();
 }
 
-function createHearts() {
-  const h = document.createElement("div");
-  h.className = "hearts";
-  h.innerHTML = "💖";
-  h.style.left = Math.random() * 100 + "%";
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 5000);
+/* 🎆 FIREWORKS EFFECT */
+function fireworks() {
+  setInterval(() => {
+    const f = document.createElement("div");
+    f.className = "firework";
+    f.style.left = Math.random() * 100 + "%";
+    f.style.top = Math.random() * 100 + "%";
+    f.style.background = `hsl(${Math.random()*360},100%,60%)`;
+    document.body.appendChild(f);
+    setTimeout(() => f.remove(), 1000);
+  }, 200);
 }
-
-setInterval(createHearts, 400);
 </script>
 
 </body>
