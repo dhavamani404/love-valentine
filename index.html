@@ -74,8 +74,8 @@ function generateLink() {
   }
 
 
-  const s = btoa(unescape(encodeURIComponent(sender)));
-  const p = btoa(unescape(encodeURIComponent(partner)));
+  const s = btoa(sender);
+  const p = btoa(partner);
 
 
   const baseURL = location.origin + location.pathname.replace(/\/[^\/]*$/, "/");
@@ -96,3 +96,4 @@ function copyLink(link) {
 
 </body>
 </html>
+
