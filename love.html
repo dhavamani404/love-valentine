@@ -66,10 +66,8 @@ button {
 
 <body>
 
-<!-- KEEP AUDIO OUTSIDE dynamic content -->
-<audio id="bgMusic" loop preload="auto">
-  <source src="assets/love.mp3" type="audio/mpeg">
-</audio>
+<!-- 🎵 Background Music (selected by gender) -->
+<audio id="bgMusic" loop preload="auto"></audio>
 
 <div class="box" id="mainBox">
   <h2 id="msg"></h2>
@@ -80,20 +78,44 @@ button {
 </div>
 
 <script>
+/* ===============================
+   GET DATA FROM LINK (EMOJI SAFE)
+================================ */
 const params = new URLSearchParams(location.search);
-const partner = decodeURIComponent(escape(atob(params.get("y") || "")));
+
+const sender = decodeURIComponent(escape(atob(params.get("s") || "")));
+const partner = decodeURIComponent(escape(atob(params.get("p") || "")));
+const senderGender = params.get("sg");
+const partnerGender = params.get("pg");
+
+/* ===============================
+   ELEMENTS
+================================ */
 const music = document.getElementById("bgMusic");
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 
-let yesScale = 1;
+/* ===============================
+   SELECT SONG BY GENDER
+================================ */
+if (senderGender === "male" && partnerGender === "female") {
+  music.src = "assets/love_1.mp3";
+} else if (senderGender === "female" && partnerGender === "male") {
+  music.src = "assets/love_2.mp3";
+}
 
+/* ===============================
+   DISPLAY MESSAGE
+================================ */
 document.getElementById("msg").innerHTML =
   `Hai ${partner} 💕<br>Will you be my Valentine?`;
 
-/* 😈 NO button logic */
+/* ===============================
+   SUPER-SMART NO BUTTON
+================================ */
+let yesScale = 1;
+
 function evadeNo() {
-  // Move NO button
   noBtn.style.left = Math.random() * 80 + "%";
   noBtn.style.top = Math.random() * 80 + "%";
 
@@ -105,16 +127,21 @@ function evadeNo() {
 noBtn.addEventListener("mouseover", evadeNo);
 noBtn.addEventListener("touchstart", evadeNo);
 
-/* 💖 YES CLICK */
+/* ===============================
+   YES CLICK ACTION
+================================ */
 yesBtn.addEventListener("click", () => {
-  // 📳 Phone vibration (mobile only)
-if (navigator.vibrate) {
-  navigator.vibrate([200, 100, 200, 100, 300]);
-}
 
-  music.volume = 0.8;   // soft romantic volume
-  music.play().catch(() => {});
+  // 📳 Phone vibration (mobile)
+  if (navigator.vibrate) {
+    navigator.vibrate([200, 100, 200, 100, 300]);
+  }
 
+  // 🎵 Play music
+  music.volume = 0.35;
+  music.play().catch(()=>{});
+
+  // Change content
   document.getElementById("mainBox").innerHTML = `
     <h1>YAY 😍</h1>
     <p id="typeText"></p>
@@ -125,23 +152,26 @@ if (navigator.vibrate) {
   fireworks();
 });
 
-/* 💬 TYPEWRITER */
+/* ===============================
+   TYPEWRITER EFFECT
+================================ */
 function typeWriter(text) {
   let i = 0;
   const target = document.getElementById("typeText");
-  const speed = 60;
 
   function typing() {
     if (i < text.length) {
       target.innerHTML += text.charAt(i);
       i++;
-      setTimeout(typing, speed);
+      setTimeout(typing, 60);
     }
   }
   typing();
 }
 
-/* 🎆 FIREWORKS */
+/* ===============================
+   FIREWORKS EFFECT
+================================ */
 function fireworks() {
   setInterval(() => {
     const f = document.createElement("div");
@@ -157,4 +187,3 @@ function fireworks() {
 
 </body>
 </html>
-
