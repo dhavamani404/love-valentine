@@ -66,7 +66,7 @@ button {
 
 <body>
 
-<!-- 🎵 Background Music (selected dynamically) -->
+<!-- 🎵 Background Music -->
 <audio id="bgMusic" loop preload="auto"></audio>
 
 <div class="box" id="mainBox">
@@ -79,8 +79,8 @@ button {
 
 <script>
 /* ===============================
-   READ SHORT LINK PARAMETERS
-   y = partner name
+   READ SHORT URL PARAMETERS
+   y = partner name (base64, emoji safe)
    g = gender combo (mf / fm)
 ================================ */
 const params = new URLSearchParams(location.search);
@@ -90,7 +90,8 @@ const partner = decodeURIComponent(
   escape(atob(params.get("y") || ""))
 );
 
-const genderCombo = params.get("g"); // mf or fm
+// Gender combo FIXED
+const genderCombo = (params.get("g") || "").toLowerCase().trim();
 
 /* ===============================
    ELEMENTS
@@ -100,12 +101,14 @@ const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 
 /* ===============================
-   SELECT MUSIC BY GENDER
+   SELECT MUSIC (FINAL FIX)
 ================================ */
 if (genderCombo === "mf") {
-  music.src = "assets/love_1.mp3";
+  music.src = "assets/love_1.mp3";   // male → female
 } else if (genderCombo === "fm") {
-  music.src = "assets/love_2.mp3";
+  music.src = "assets/love_2.mp3";   // female → male
+} else {
+  music.src = "assets/love_1.mp3";   // fallback safety
 }
 
 /* ===============================
@@ -116,6 +119,7 @@ document.getElementById("msg").innerHTML =
 
 /* ===============================
    SUPER-SMART NO BUTTON
+   + YES grows +20% every time
 ================================ */
 let yesScale = 1;
 
@@ -123,7 +127,6 @@ function evadeNo() {
   noBtn.style.left = Math.random() * 80 + "%";
   noBtn.style.top = Math.random() * 80 + "%";
 
-  // Increase YES size by +20%
   yesScale += 0.2;
   yesBtn.style.transform = `scale(${yesScale})`;
 }
@@ -141,8 +144,8 @@ yesBtn.addEventListener("click", () => {
     navigator.vibrate([200, 100, 200, 100, 300]);
   }
 
-  // 🎵 Play music
-  music.volume = 0.8;   // soft romantic volume
+  // 🎵 Play music (browser safe)
+  music.volume = 0.35;   // soft romantic
   music.play().catch(()=>{});
 
   // Change content
@@ -182,7 +185,8 @@ function fireworks() {
     f.className = "firework";
     f.style.left = Math.random() * 100 + "%";
     f.style.top = Math.random() * 100 + "%";
-    f.style.background = `hsl(${Math.random()*360},100%,60%)`;
+    f.style.background =
+      `hsl(${Math.random()*360},100%,60%)`;
     document.body.appendChild(f);
     setTimeout(() => f.remove(), 1000);
   }, 200);
