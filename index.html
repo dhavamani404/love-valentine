@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>To My Love 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  width: 320px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+button {
+  background: #ff4d6d;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+button:hover {
+  background: #ff3355;
+}
+#linkBox {
+  margin-top: 15px;
+  word-break: break-all;
+}
+.copyBtn {
+  background: #6c63ff;
+  margin-top: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>💖 To My Love 💖</h2>
+
+  <input id="sender" placeholder="Your Name">
+  <input id="partner" placeholder="Partner Name">
+
+  <button onclick="generateLink()">Share Love 💌</button>
+  <div id="linkBox"></div>
+</div>
+
+<script>
+function generateLink() {
+  const sender = document.getElementById("sender").value.trim();
+  const partner = document.getElementById("partner").value.trim();
+
+  if (!sender || !partner) {
+    alert("Please enter both names 💕");
+    return;
+  }
+
+
+  const s = btoa(unescape(encodeURIComponent(sender)));
+  const p = btoa(unescape(encodeURIComponent(partner)));
+
+
+  const baseURL = location.origin + location.pathname.replace(/\/[^\/]*$/, "/");
+  const link = `${baseURL}love.html?x=${s}&y=${p}`;
+
+  document.getElementById("linkBox").innerHTML = `
+    <p>Send this link 💖</p>
+    <a href="${link}" target="_blank">${link}</a>
+    <button class="copyBtn" onclick="copyLink('${link}')">Copy Link 📋</button>
+  `;
+}
+
+function copyLink(link) {
+  navigator.clipboard.writeText(link);
+  alert("Link copied 💕 Send it to your love!");
+}
+</script>
+
+</body>
+</html>
