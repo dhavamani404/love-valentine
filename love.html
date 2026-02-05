@@ -6,22 +6,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* 🌸 Lucy Font */
 @font-face {
-  font-family: 'Lucy';
+  font-family: 'LucySaidOk';
   src: url('assets/LucySaidOk.ttf') format('truetype');
 }
 
+/* Base */
 body{
   margin:0;height:100vh;
   background:linear-gradient(135deg,#ff9a9e,#fad0c4);
   display:flex;justify-content:center;align-items:center;
   font-family:'Comic Sans MS',cursive;
   overflow:hidden;
-  transition:background .5s ease, transform .1s ease;
-}
-
-body.rage {
-  background:#8b0000;
+  transition:transform .1s ease;
 }
 
 .box{
@@ -40,24 +38,61 @@ button{
 #yes{background:#ff4d6d;color:#fff;}
 #no{background:#ccc;position:absolute;}
 
+/* 🌸 Fade-in animation */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ✨ Glow animation */
+@keyframes glow {
+  0%   { text-shadow:0 0 5px #ff9eb5; }
+  50%  { text-shadow:0 0 15px #ff4d6d; }
+  100% { text-shadow:0 0 5px #ff9eb5; }
+}
+
+/* 🎭 NO MESSAGE */
 #noMsg{
   margin-top:10px;
   transition:all .3s ease;
 }
 
-/* Message Modes */
+/* 💕 Initial Lovely (Lucy + fade) */
 .mode-love{
-  font-family:'Lucy', cursive;
+  font-family:'LucySaidOk',cursive;
   color:#ff5c8a;
   font-size:15px;
+  animation:fadeUp .8s ease forwards;
 }
-.mode-angry{color:#ff9800;font-weight:bold;}
-.mode-angrier{color:#ff3b3b;font-weight:800;}
+
+/* 😠 Little angry */
+.mode-angry{
+  font-family:Arial,sans-serif;
+  color:#ff9800;
+  font-weight:bold;
+}
+
+/* 😡 Angry */
+.mode-angrier{
+  font-family:Arial,sans-serif;
+  color:#ff3b3b;
+  font-weight:800;
+}
+
+/* 😏 Too angry */
 .mode-rage{
-  color:#fff;
-  font-size:16px;
-  font-weight:900;
+  font-family:Arial Black,sans-serif;
+  color:#b00020;
   font-style:italic;
+  font-size:16px;
+}
+
+/* ✨ Success text (Lucy + fade + glow) */
+#successText{
+  font-family:'LucySaidOk',cursive;
+  font-size:18px;
+  color:#ff4d6d;
+  animation:fadeUp 1s ease forwards, glow 2s infinite;
 }
 
 /* Fireworks */
@@ -76,13 +111,13 @@ button{
 
 <audio id="bgMusic" loop preload="auto"></audio>
 <audio id="noSound" src="assets/no_sound.mp3" preload="auto"></audio>
-<audio id="evilSound" src="assets/evil_laugh.mp3" preload="auto"></audio>
 
 <div class="box" id="mainBox">
   <h2 id="msg"></h2>
 
+  <!-- 🌸 Initial NO message -->
   <p id="noMsg" class="mode-love">
-    sonna kelu no thodathe 😁
+    sonna kelu "NO" thodathe 😁
   </p>
 
   <img src="assets/heart.gif" width="120"><br><br>
@@ -92,24 +127,26 @@ button{
 </div>
 
 <script>
+/* URL PARAMS */
 const params=new URLSearchParams(location.search);
 const partner=decodeURIComponent(escape(atob(params.get("y")||"")));
 const genderCombo=(params.get("g")||"").toLowerCase().trim();
 
+/* ELEMENTS */
 const music=document.getElementById("bgMusic");
 const yesBtn=document.getElementById("yes");
 const noBtn=document.getElementById("no");
 const noMsg=document.getElementById("noMsg");
 const noSound=document.getElementById("noSound");
-const evilSound=document.getElementById("evilSound");
 
-if(genderCombo==="mf")music.src="assets/love_1.mp3";
-else if(genderCombo==="fm")music.src="assets/love_2.mp3";
-else music.src="assets/love_1.mp3";
+/* MUSIC */
+music.src = genderCombo==="fm" ? "assets/love_2.mp3" : "assets/love_1.mp3";
 
-document.getElementById("msg").innerHTML=
+/* QUESTION */
+document.getElementById("msg").innerHTML =
 `Hai ${partner} 💕<br>Will you be my Valentine?`;
 
+/* NO BUTTON */
 let yesScale=1,noCount=0;
 
 function evadeNo(){
@@ -141,8 +178,6 @@ function evadeNo(){
   else if(noCount===3){
     noMsg.className="mode-rage";
     noMsg.innerText="sonna kekka matta ipo paaru 😏!!!!...";
-    document.body.classList.add("rage");
-    evilSound.play();
     setTimeout(()=>noBtn.style.display="none",2000);
   }
 }
@@ -150,6 +185,7 @@ function evadeNo(){
 noBtn.addEventListener("mouseover",evadeNo);
 noBtn.addEventListener("touchstart",evadeNo);
 
+/* YES */
 yesBtn.addEventListener("click",()=>{
   if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);
   music.volume=.35;
@@ -157,7 +193,7 @@ yesBtn.addEventListener("click",()=>{
 
   document.getElementById("mainBox").innerHTML=`
     <h1>YAY 😍</h1>
-    <p id="typeText" style="font-family:'Lucy',cursive;"></p>
+    <p id="successText"></p>
     <img src="assets/love.png" width="200">
   `;
 
@@ -165,8 +201,10 @@ yesBtn.addEventListener("click",()=>{
   fireworks();
 });
 
+/* TYPEWRITER */
 function typeWriter(text){
-  let i=0,t=document.getElementById("typeText");
+  let i=0;
+  const t=document.getElementById("successText");
   (function typing(){
     if(i<text.length){
       t.innerHTML+=text.charAt(i++);
@@ -175,6 +213,7 @@ function typeWriter(text){
   })();
 }
 
+/* FIREWORKS */
 function fireworks(){
   setInterval(()=>{
     const f=document.createElement("div");
