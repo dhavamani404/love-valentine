@@ -6,13 +6,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+@font-face {
+  font-family: 'Lucy';
+  src: url('assets/LucySaidOk.ttf') format('truetype');
+}
+
 body{
   margin:0;height:100vh;
   background:linear-gradient(135deg,#ff9a9e,#fad0c4);
   display:flex;justify-content:center;align-items:center;
   font-family:'Comic Sans MS',cursive;
   overflow:hidden;
-  transition:transform .1s ease;
+  transition:background .5s ease, transform .1s ease;
+}
+
+body.rage {
+  background:#8b0000;
 }
 
 .box{
@@ -31,39 +40,24 @@ button{
 #yes{background:#ff4d6d;color:#fff;}
 #no{background:#ccc;position:absolute;}
 
-/* 🎭 NO MESSAGE MODES */
 #noMsg{
   margin-top:10px;
   transition:all .3s ease;
 }
 
-/* Lovely */
+/* Message Modes */
 .mode-love{
-  font-family:'Comic Sans MS',cursive;
+  font-family:'Lucy', cursive;
   color:#ff5c8a;
-  font-size:14px;
+  font-size:15px;
 }
-
-/* Little angry */
-.mode-angry{
-  font-family:Arial,sans-serif;
-  color:#ff9800;
-  font-weight:bold;
-}
-
-/* Angry */
-.mode-angrier{
-  font-family:Arial,sans-serif;
-  color:#ff3b3b;
-  font-weight:800;
-}
-
-/* Too angry */
+.mode-angry{color:#ff9800;font-weight:bold;}
+.mode-angrier{color:#ff3b3b;font-weight:800;}
 .mode-rage{
-  font-family:Arial Black,sans-serif;
-  color:#b00020;
-  font-style:italic;
+  color:#fff;
   font-size:16px;
+  font-weight:900;
+  font-style:italic;
 }
 
 /* Fireworks */
@@ -82,13 +76,13 @@ button{
 
 <audio id="bgMusic" loop preload="auto"></audio>
 <audio id="noSound" src="assets/no_sound.mp3" preload="auto"></audio>
+<audio id="evilSound" src="assets/evil_laugh.mp3" preload="auto"></audio>
 
 <div class="box" id="mainBox">
   <h2 id="msg"></h2>
 
-  <!-- 🎭 NO MESSAGE -->
   <p id="noMsg" class="mode-love">
-    sonna kelu "NO" thodathe 😁
+    sonna kelu no thodathe 😁
   </p>
 
   <img src="assets/heart.gif" width="120"><br><br>
@@ -98,28 +92,24 @@ button{
 </div>
 
 <script>
-/* URL PARAMS */
 const params=new URLSearchParams(location.search);
 const partner=decodeURIComponent(escape(atob(params.get("y")||"")));
 const genderCombo=(params.get("g")||"").toLowerCase().trim();
 
-/* ELEMENTS */
 const music=document.getElementById("bgMusic");
 const yesBtn=document.getElementById("yes");
 const noBtn=document.getElementById("no");
 const noMsg=document.getElementById("noMsg");
 const noSound=document.getElementById("noSound");
+const evilSound=document.getElementById("evilSound");
 
-/* MUSIC */
 if(genderCombo==="mf")music.src="assets/love_1.mp3";
 else if(genderCombo==="fm")music.src="assets/love_2.mp3";
 else music.src="assets/love_1.mp3";
 
-/* QUESTION */
 document.getElementById("msg").innerHTML=
 `Hai ${partner} 💕<br>Will you be my Valentine?`;
 
-/* NO BUTTON LOGIC */
 let yesScale=1,noCount=0;
 
 function evadeNo(){
@@ -151,6 +141,8 @@ function evadeNo(){
   else if(noCount===3){
     noMsg.className="mode-rage";
     noMsg.innerText="sonna kekka matta ipo paaru 😏!!!!...";
+    document.body.classList.add("rage");
+    evilSound.play();
     setTimeout(()=>noBtn.style.display="none",2000);
   }
 }
@@ -158,7 +150,6 @@ function evadeNo(){
 noBtn.addEventListener("mouseover",evadeNo);
 noBtn.addEventListener("touchstart",evadeNo);
 
-/* YES */
 yesBtn.addEventListener("click",()=>{
   if(navigator.vibrate)navigator.vibrate([200,100,200,100,300]);
   music.volume=.35;
@@ -166,14 +157,14 @@ yesBtn.addEventListener("click",()=>{
 
   document.getElementById("mainBox").innerHTML=`
     <h1>YAY 😍</h1>
-    <p id="typeText"></p>
+    <p id="typeText" style="font-family:'Lucy',cursive;"></p>
     <img src="assets/love.png" width="200">
   `;
+
   typeWriter("Best decision ever 💖 I love you endlessly 😘");
   fireworks();
 });
 
-/* TYPEWRITER */
 function typeWriter(text){
   let i=0,t=document.getElementById("typeText");
   (function typing(){
@@ -184,7 +175,6 @@ function typeWriter(text){
   })();
 }
 
-/* FIREWORKS */
 function fireworks(){
   setInterval(()=>{
     const f=document.createElement("div");
